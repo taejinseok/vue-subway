@@ -4,7 +4,9 @@
 - [ ] Vue CIL을 이용해 Vue Project로 만들어 진행한다.
 - [ ] 지하철 마지막 미션인 favorite를 이용해 View를 Vue로 변경한다.
 - [ ] API 통신은 자신이 만든 백엔드 프로그램으로 진행한다.
- 
+- [ ] 1단계 admin을 먼저 구현한다.
+- [ ] 2단계 service를 구현한다.
+
 ## 제약사항
 - Eslint와 Prettier로 컨벤션 약속 정하기
 - var 쓰지 말것 (let과 const만 쓰자)
