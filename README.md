@@ -1,4 +1,4 @@
-# SubWay 미션 마이그래이션
+# SubWay 미션 Vue 변환
 
 ## 요구사항
 - [ ] Vue CIL을 이용해 Vue Project로 만들어 진행한다.
