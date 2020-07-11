@@ -189,17 +189,20 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { GET_LINES } from "../store/getters.type.js";
 import ColorSelector from "@/components/ColorSelector.vue";
-import { lines } from "../utils/MockData.js";
 import { subwayLineColorOptions } from "@/utils/defaultSubwayData.js";
 
 export default {
   components: {
     ColorSelector
   },
+  computed: {
+    ...mapGetters({ lines: GET_LINES })
+  },
   data() {
     return {
-      lines,
       subwayLineColorOptions
     };
   }

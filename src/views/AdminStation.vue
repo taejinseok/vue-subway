@@ -39,18 +39,16 @@
         </div>
       </div>
     </div>
-    <!--<script type="module" src="/admin/js/views/AdminStation.js"></script>-->
   </div>
 </template>
 
 <script>
-import { stations } from "../utils/MockData.js";
+import { mapGetters } from "vuex";
+import { GET_STATIONS } from "../store/getters.type.js";
 
 export default {
-  data() {
-    return {
-      stations
-    };
+  computed: {
+    ...mapGetters({ stations: GET_STATIONS })
   }
 };
 </script>

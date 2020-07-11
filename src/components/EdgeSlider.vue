@@ -7,8 +7,9 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { GET_LINE_DETAILS } from "../store/getters.type.js";
 import EdgeLine from "./EdgeLine.vue";
-import { lineDetails } from "../utils/MockData.js";
 import tns from "../../public/static/admin/lib/slider/tiny-slider.js";
 
 export default {
@@ -16,13 +17,11 @@ export default {
   components: {
     EdgeLine
   },
+  computed: {
+    ...mapGetters({ subwayLines: GET_LINE_DETAILS })
+  },
   mounted() {
     this.initSlider();
-  },
-  data() {
-    return {
-      subwayLines: lineDetails.lineDetailResponse
-    };
   },
   methods: {
     initSlider() {
