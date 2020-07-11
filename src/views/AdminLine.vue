@@ -158,6 +158,12 @@
                 type="text"
                 disabled
               />
+              <ColorSelector
+                v-for="(option, index) in subwayLineColorOptions"
+                :option="option"
+                :key="option.color"
+                :index="index"
+              />
             </div>
 
             <div class="action-container flex justify-end pt-4">
@@ -183,12 +189,18 @@
 </template>
 
 <script>
+import ColorSelector from "@/components/ColorSelector.vue";
 import { defaultSubwayLines } from "@/utils/subwayMockData.js";
+import { subwayLineColorOptions } from "@/utils/defaultSubwayData.js";
 
 export default {
+  components: {
+    ColorSelector
+  },
   data() {
     return {
-      lines: defaultSubwayLines
+      lines: defaultSubwayLines,
+      subwayLineColorOptions
     };
   }
 };
