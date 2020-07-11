@@ -36,3 +36,58 @@
     <router-view />
   </div>
 </template>
+
+<style>
+.app-container {
+  height: calc(100vh - 78px);
+}
+
+.main-logo {
+  width: 170px;
+}
+
+body {
+  overflow-y: hidden;
+}
+
+body.modal-active {
+  overflow-x: hidden;
+  overflow-y: visible !important;
+}
+
+.width-350px {
+  width: 350px;
+}
+
+.width-400px {
+  width: 400px;
+}
+
+.width-450px {
+  width: 450px;
+}
+
+.top-28px {
+  top: 28px;
+}
+
+.left-10px {
+  left: 10px;
+}
+
+.right-10px {
+  right: 10px;
+}
+
+.top-50 {
+  top: 50%;
+}
+
+.bottom-6px {
+  bottom: 6px;
+}
+
+.height-90 {
+  height: 90%;
+}
+</style>
