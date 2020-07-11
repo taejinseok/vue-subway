@@ -190,7 +190,7 @@
 
 <script>
 import ColorSelector from "@/components/ColorSelector.vue";
-import { defaultSubwayLines } from "@/utils/subwayMockData.js";
+import { lines } from "../utils/MockData.js";
 import { subwayLineColorOptions } from "@/utils/defaultSubwayData.js";
 
 export default {
@@ -199,7 +199,7 @@ export default {
   },
   data() {
     return {
-      lines: defaultSubwayLines,
+      lines,
       subwayLineColorOptions
     };
   }

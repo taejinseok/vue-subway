@@ -51,9 +51,7 @@ var tns = (function() {
     if (access) {
       try {
         storage.setItem(key, value);
-      } catch (e) {
-        throw new Error(e);
-      }
+      } catch (e) {}
     }
     return value;
   }
@@ -125,9 +123,7 @@ var tns = (function() {
           break;
         }
       }
-    } catch (e) {
-      throw new Error(e);
-    }
+    } catch (e) {}
 
     body.fake ? resetFakeBody(body, docOverflow) : div.remove();
 
@@ -347,13 +343,13 @@ var tns = (function() {
     return arr;
   }
 
-  function hideElement(el) {
+  function hideElement(el, forceHide) {
     if (el.style.display !== "none") {
       el.style.display = "none";
     }
   }
 
-  function showElement(el) {
+  function showElement(el, forceHide) {
     if (el.style.display === "none") {
       el.style.display = "";
     }
@@ -380,7 +376,7 @@ var tns = (function() {
 
     var el = document.createElement("fakeelement"),
       len = props.length;
-    for (var i = 0; i < len; i++) {
+    for (var i = 0; i < props.length; i++) {
       var prop = props[i];
       if (el.style[prop] !== undefined) {
         return prop;
@@ -440,13 +436,10 @@ var tns = (function() {
     var opts = Object.defineProperty({}, "passive", {
       get: function() {
         supportsPassive = true;
-        return "";
       }
     });
     window.addEventListener("test", null, opts);
-  } catch (e) {
-    throw new Error(e);
-  }
+  } catch (e) {}
   var passiveOption = supportsPassive ? { passive: true } : false;
 
   function addEvents(el, obj, preventScrolling) {
@@ -498,14 +491,15 @@ var tns = (function() {
   function jsTransform(element, attr, prefix, postfix, to, duration, callback) {
     var tick = Math.min(duration, 10),
       unit = to.indexOf("%") >= 0 ? "%" : "px",
-      newTo = to.replace(unit, ""),
+      to = to.replace(unit, ""),
       from = Number(
         element.style[attr]
           .replace(prefix, "")
           .replace(postfix, "")
           .replace(unit, "")
       ),
-      positionTick = ((newTo - from) / duration) * tick;
+      positionTick = ((to - from) / duration) * tick,
+      running;
 
     setTimeout(moveElement, tick);
     function moveElement() {
@@ -933,9 +927,11 @@ var tns = (function() {
       })(),
       index = getStartIndex(getOption("startIndex")),
       indexCached = index,
+      displayIndex = getCurrentSlide(),
       indexMin = 0,
       indexMax = !autoWidth ? getIndexMax() : null,
       // resize
+      resizeTimer,
       preventActionWhenRunning = options.preventActionWhenRunning,
       swipeAngle = options.swipeAngle,
       moveDirectionExpected = swipeAngle ? "?" : true,
@@ -1045,6 +1041,8 @@ var tns = (function() {
       var initPosition = {},
         lastPosition = {},
         translateInit,
+        disX,
+        disY,
         panStart = false,
         rafIndex,
         getDist = horizontal
@@ -1373,7 +1371,9 @@ var tns = (function() {
 
     function initStructure() {
       var classOuter = "tns-outer",
-        classInner = "tns-inner";
+        classInner = "tns-inner",
+        hasGutter = hasOption("gutter");
+
       outerWrapper.className = classOuter;
       innerWrapper.className = classInner;
       outerWrapper.id = slideId + "-ow";
@@ -1707,7 +1707,7 @@ var tns = (function() {
         }
 
         // slide styles
-        str =
+        var str =
           horizontal && !autoWidth
             ? getSlideWidthStyle(fixedWidth, gutter, items)
             : "";
@@ -1733,6 +1733,7 @@ var tns = (function() {
           bp = parseInt(bp);
 
           var opts = responsive[bp],
+            str = "",
             middleWrapperStr = "",
             innerWrapperStr = "",
             containerStr = "",
@@ -1744,7 +1745,6 @@ var tns = (function() {
             autoHeightBP = getOption("autoHeight", bp),
             gutterBP = getOption("gutter", bp);
 
-          str = "";
           // middle wrapper string
           if (
             TRANSITIONDURATION &&
@@ -1889,6 +1889,7 @@ var tns = (function() {
 
       // == navInit ==
       if (hasNav) {
+        var initIndex = !carousel ? 0 : cloneCount;
         // customized nav
         // will not hide the navs in case they're thumbnails
         if (navContainer) {
@@ -2161,7 +2162,7 @@ var tns = (function() {
       });
 
       // reset variables
-      tnsList = animateIn = animateOut = animateDelay = animateNormal = horizontal = outerWrapper = innerWrapper = container = containerParent = containerHTML = slideItems = slideCount = breakpointZone = windowWidth = autoWidth = fixedWidth = edgePadding = gutter = viewport = items = slideBy = viewportMax = arrowKeys = speed = rewind = loop = autoHeight = sheet = lazyload = slidePositions = slideItemsOut = cloneCount = slideCountNew = hasRightDeadZone = rightBoundary = updateIndexBeforeTransform = transformAttr = transformPrefix = transformPostfix = getIndexMax = index = indexCached = indexMin = indexMax = swipeAngle = moveDirectionExpected = running = onInit = events = newContainerClasses = slideId = disable = disabled = freezable = freeze = frozen = controlsEvents = navEvents = hoverEvents = visibilityEvent = docmentKeydownEvent = touchEvents = dragEvents = hasControls = hasNav = navAsThumbnails = hasAutoplay = hasTouch = hasMouseDrag = slideActiveClass = imgCompleteClass = imgEvents = imgsComplete = controls = controlsText = controlsContainer = controlsContainerHTML = prevButton = nextButton = prevIsButton = nextIsButton = nav = navContainer = navContainerHTML = navItems = pages = pagesCached = navClicked = navCurrentIndex = navCurrentIndexCached = navActiveClass = navStr = navStrCurrent = autoplay = autoplayTimeout = autoplayDirection = autoplayText = autoplayHoverPause = autoplayButton = autoplayButtonHTML = autoplayResetOnVisibility = autoplayHtmlStrings = autoplayTimer = animating = autoplayHoverPaused = autoplayUserPaused = autoplayVisibilityPaused = initPosition = lastPosition = translateInit = panStart = rafIndex = getDist = touch = mouseDrag = null;
+      tnsList = animateIn = animateOut = animateDelay = animateNormal = horizontal = outerWrapper = innerWrapper = container = containerParent = containerHTML = slideItems = slideCount = breakpointZone = windowWidth = autoWidth = fixedWidth = edgePadding = gutter = viewport = items = slideBy = viewportMax = arrowKeys = speed = rewind = loop = autoHeight = sheet = lazyload = slidePositions = slideItemsOut = cloneCount = slideCountNew = hasRightDeadZone = rightBoundary = updateIndexBeforeTransform = transformAttr = transformPrefix = transformPostfix = getIndexMax = index = indexCached = indexMin = indexMax = resizeTimer = swipeAngle = moveDirectionExpected = running = onInit = events = newContainerClasses = slideId = disable = disabled = freezable = freeze = frozen = controlsEvents = navEvents = hoverEvents = visibilityEvent = docmentKeydownEvent = touchEvents = dragEvents = hasControls = hasNav = navAsThumbnails = hasAutoplay = hasTouch = hasMouseDrag = slideActiveClass = imgCompleteClass = imgEvents = imgsComplete = controls = controlsText = controlsContainer = controlsContainerHTML = prevButton = nextButton = prevIsButton = nextIsButton = nav = navContainer = navContainerHTML = navItems = pages = pagesCached = navClicked = navCurrentIndex = navCurrentIndexCached = navActiveClass = navStr = navStrCurrent = autoplay = autoplayTimeout = autoplayDirection = autoplayText = autoplayHoverPause = autoplayButton = autoplayButtonHTML = autoplayResetOnVisibility = autoplayHtmlStrings = autoplayTimer = animating = autoplayHoverPaused = autoplayUserPaused = autoplayVisibilityPaused = initPosition = lastPosition = translateInit = disX = disY = panStart = rafIndex = getDist = touch = mouseDrag = null;
       // check variables
       // [animateIn, animateOut, animateDelay, animateNormal, horizontal, outerWrapper, innerWrapper, container, containerParent, containerHTML, slideItems, slideCount, breakpointZone, windowWidth, autoWidth, fixedWidth, edgePadding, gutter, viewport, items, slideBy, viewportMax, arrowKeys, speed, rewind, loop, autoHeight, sheet, lazyload, slidePositions, slideItemsOut, cloneCount, slideCountNew, hasRightDeadZone, rightBoundary, updateIndexBeforeTransform, transformAttr, transformPrefix, transformPostfix, getIndexMax, index, indexCached, indexMin, indexMax, resizeTimer, swipeAngle, moveDirectionExpected, running, onInit, events, newContainerClasses, slideId, disable, disabled, freezable, freeze, frozen, controlsEvents, navEvents, hoverEvents, visibilityEvent, docmentKeydownEvent, touchEvents, dragEvents, hasControls, hasNav, navAsThumbnails, hasAutoplay, hasTouch, hasMouseDrag, slideActiveClass, imgCompleteClass, imgEvents, imgsComplete, controls, controlsText, controlsContainer, controlsContainerHTML, prevButton, nextButton, prevIsButton, nextIsButton, nav, navContainer, navContainerHTML, navItems, pages, pagesCached, navClicked, navCurrentIndex, navCurrentIndexCached, navActiveClass, navStr, navStrCurrent, autoplay, autoplayTimeout, autoplayDirection, autoplayText, autoplayHoverPause, autoplayButton, autoplayButtonHTML, autoplayResetOnVisibility, autoplayHtmlStrings, autoplayTimer, animating, autoplayHoverPaused, autoplayUserPaused, autoplayVisibilityPaused, initPosition, lastPosition, translateInit, disX, disY, panStart, rafIndex, getDist, touch, mouseDrag ].forEach(function(item) { if (item !== null) { console.log(item); } });
 
@@ -3564,23 +3565,25 @@ var tns = (function() {
       }
 
       e = getEvent(e);
-      var target = getTarget(e);
+      var target = getTarget(e),
+        navIndex;
+
       // find the clicked nav item
       while (target !== navContainer && !hasAttr(target, "data-nav")) {
         target = target.parentNode;
       }
       if (hasAttr(target, "data-nav")) {
-        var newNavIndex = (navClicked = Number(getAttr(target, "data-nav"))),
+        var navIndex = (navClicked = Number(getAttr(target, "data-nav"))),
           targetIndexBase =
             fixedWidth || autoWidth
-              ? (newNavIndex * slideCount) / pages
-              : newNavIndex * items,
+              ? (navIndex * slideCount) / pages
+              : navIndex * items,
           targetIndex = navAsThumbnails
-            ? newNavIndex
+            ? navIndex
             : Math.min(Math.ceil(targetIndexBase), slideCount - 1);
         goTo(targetIndex, e);
 
-        if (navCurrentIndex === newNavIndex) {
+        if (navCurrentIndex === navIndex) {
           if (animating) {
             stopAutoplay();
           }
@@ -3855,9 +3858,7 @@ var tns = (function() {
           if (e.type) {
             events.emit(isTouchEvent(e) ? "touchMove" : "dragMove", info(e));
           }
-        } catch (err) {
-          throw new Error(err);
-        }
+        } catch (err) {}
 
         var x = translateInit,
           dist = getDist(lastPosition, initPosition);

@@ -44,12 +44,12 @@
 </template>
 
 <script>
-import { defaultSubwayLines } from "@/utils/subwayMockData.js";
+import { stations } from "../utils/MockData.js";
 
 export default {
   data() {
     return {
-      stations: defaultSubwayLines
+      stations
     };
   }
 };
