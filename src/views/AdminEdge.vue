@@ -206,7 +206,7 @@ import {
   GET_LINE_DETAILS,
   GET_STATIONS
 } from "../store/getters.type.js";
-import { CREATE_EDGE, FETCH_STATIONS } from "../store/actions.type.js";
+import { ADD_EDGE, FETCH_STATIONS } from "../store/actions.type.js";
 
 export default {
   components: {
@@ -248,7 +248,7 @@ export default {
     },
     createEdge() {
       this.$store
-        .dispatch(CREATE_EDGE, {
+        .dispatch(ADD_EDGE, {
           lineId: this.lineId,
           payload: {
             preStationId: this.preStationId,

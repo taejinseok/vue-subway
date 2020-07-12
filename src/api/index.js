@@ -27,7 +27,7 @@ export const StationsService = {
     return ApiService.post("stations", params);
   },
   remove(id) {
-    return ApiService.delete("stations", id);
+    return ApiService.delete(`stations/${id}`);
   }
 };
 
@@ -39,7 +39,7 @@ export const LinesService = {
     return ApiService.post("lines", params);
   },
   remove(id) {
-    return ApiService.delete("lines", id);
+    return ApiService.delete(`lines/${id}`);
   }
 };
 

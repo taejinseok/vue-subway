@@ -8,10 +8,12 @@ import {
   GET_STATIONS_BY_LINE
 } from "./getters.type.js";
 import {
-  CREATE_EDGE,
+  ADD_EDGE,
+  ADD_STATION,
   EDIT_EDGE_REMOVE_STATION,
   FETCH_EDGES,
-  FETCH_STATIONS
+  FETCH_STATIONS,
+  REMOVE_STATION
 } from "./actions.type.js";
 import { FETCH_EDGES_END, FETCH_STATIONS_END } from "./mutations.type.js";
 
@@ -37,7 +39,7 @@ export default new Vuex.Store({
       const { lineDetailResponse } = await EdgesService.get();
       commit(FETCH_EDGES_END, lineDetailResponse);
     },
-    async [CREATE_EDGE](context, { lineId, payload }) {
+    async [ADD_EDGE](context, { lineId, payload }) {
       await EdgesService.add(lineId, payload);
       await context.dispatch(FETCH_EDGES);
     },
@@ -48,6 +50,14 @@ export default new Vuex.Store({
 
     async [FETCH_STATIONS]({ commit }) {
       commit(FETCH_STATIONS_END, await StationsService.get());
+    },
+    async [ADD_STATION](context, payload) {
+      await StationsService.add(payload);
+      await context.dispatch(FETCH_STATIONS);
+    },
+    async [REMOVE_STATION](context, { id }) {
+      await StationsService.remove(id);
+      await context.dispatch(FETCH_STATIONS);
     }
   },
   getters: {

@@ -11,10 +11,12 @@
               type="text"
               autocomplete="off"
               placeholder="역 이름을 추가해주세요."
+              v-model="inputStationValue"
             />
             <button
               id="station-add-btn"
               class="inline-block text-sm bg-yellow-500 hover:bg-yellow-400 hover:text-gray-700 text-gray-800 font-bold py-2 px-4 rounded"
+              @click.prevent="addStation"
             >
               추가
             </button>
@@ -22,19 +24,11 @@
         </form>
         <div class="mt-5 flex station-list-container relative overflow-y-auto">
           <div id="station-list" class="w-full">
-            <div
+            <station-item
               v-for="data in stations"
               :key="data.name"
-              class="list-item border border-gray-200 py-2 px-4 text-gray-800"
-              data-id="data.id"
-            >
-              {{ data.name }}
-              <button
-                class="hover:bg-gray-300 hover:text-gray-500 text-gray-300 px-1 rounded-full float-right"
-              >
-                <span class="mdi mdi-delete"></span>
-              </button>
-            </div>
+              :station="data"
+            />
           </div>
         </div>
       </div>
@@ -45,10 +39,33 @@
 <script>
 import { mapGetters } from "vuex";
 import { GET_STATIONS } from "../store/getters.type.js";
+import { ADD_STATION, FETCH_STATIONS } from "../store/actions.type.js";
+import StationItem from "../components/StationItem.vue";
 
 export default {
+  components: {
+    StationItem
+  },
   computed: {
     ...mapGetters({ stations: GET_STATIONS })
+  },
+  mounted() {
+    this.$store.dispatch(FETCH_STATIONS);
+  },
+  data() {
+    return {
+      inputStationValue: ""
+    };
+  },
+  methods: {
+    addStation() {
+      if (!this.inputStationValue) {
+        return;
+      }
+      this.$store
+        .dispatch(ADD_STATION, { name: this.inputStationValue })
+        .then(() => (this.inputStationValue = ""));
+    }
   }
 };
 </script>
