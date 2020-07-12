@@ -85,9 +85,9 @@ function AdminEdge() {
 
   const initCreateEdgeForm = event => {
     event.preventDefault();
+    initLineOptions(subwayLines);
     initPreviousStationOptions();
     initNextStationOptions();
-    initLineOptions(subwayLines);
   };
 
   const initPreviousStationOptions = () => {
