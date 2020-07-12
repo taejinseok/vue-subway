@@ -206,10 +206,9 @@ import {
   GET_LINE_DETAILS,
   GET_STATIONS
 } from "../store/getters.type.js";
-import { CREATE_EDGE } from "../store/actions.type.js";
+import { CREATE_EDGE, FETCH_STATIONS } from "../store/actions.type.js";
 
 export default {
-  name: "AdminEdge",
   components: {
     EdgeSlider
   },
@@ -217,9 +216,11 @@ export default {
     ...mapGetters({ stations: GET_STATIONS }),
     ...mapGetters({ subwayLines: GET_LINE_DETAILS })
   },
+  mounted() {
+    this.$store.dispatch(FETCH_STATIONS);
+  },
   watch: {
     lineId: function(newVal) {
-      console.log(newVal);
       this.stationsByLine = this.$store.getters[GET_STATIONS_BY_LINE](newVal);
     }
   },

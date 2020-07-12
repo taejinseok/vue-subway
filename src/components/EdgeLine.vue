@@ -9,6 +9,7 @@
           v-for="station in line.stations"
           :key="station.id"
           :station="station"
+          :line="line"
         />
       </div>
     </div>

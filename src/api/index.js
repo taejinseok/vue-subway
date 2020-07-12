@@ -12,9 +12,11 @@ const ApiService = {
   },
   post(resource, params) {
     return Vue.axios.post(resource, params);
-  }
+  },
   // update(resource, id, param) {},
-  // delete(resource, id) {}
+  delete(resource) {
+    return Vue.axios.delete(resource);
+  }
 };
 
 export const StationsService = {
@@ -47,5 +49,8 @@ export const EdgesService = {
   },
   add(lineId, params) {
     return ApiService.post(`/lines/${lineId}/stations`, params);
+  },
+  remove(lineId, stationId) {
+    return ApiService.delete(`lines/${lineId}/stations/${stationId}`);
   }
 };

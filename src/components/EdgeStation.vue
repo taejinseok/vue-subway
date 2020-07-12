@@ -6,6 +6,7 @@
     {{ station.name }}
     <button
       class="hover:bg-gray-300 hover:text-gray-500 text-gray-300 px-1 rounded-full float-right"
+      @click="removeStation"
     >
       <span class="mdi mdi-delete"></span>
     </button>
@@ -13,15 +14,27 @@
 </template>
 
 <script>
+import { EDIT_EDGE_REMOVE_STATION } from "../store/actions.type.js";
+
 export default {
   name: "EdgeStation",
   props: {
     station: {
       type: Object,
       required: true
+    },
+    line: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    removeStation() {
+      this.$store.dispatch(EDIT_EDGE_REMOVE_STATION, {
+        lineId: this.line.id,
+        stationId: this.station.id
+      });
     }
   }
 };
 </script>
-
-<style scoped></style>

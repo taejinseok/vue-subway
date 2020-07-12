@@ -1,38 +1,53 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { lines, lineDetails, stations } from "../utils/MockData.js";
-import { EdgesService } from "../api";
+import { EdgesService, StationsService } from "../api";
 import {
-  GET_STATIONS_BY_LINE,
   GET_LINE_DETAILS,
   GET_LINES,
-  GET_STATIONS
+  GET_STATIONS,
+  GET_STATIONS_BY_LINE
 } from "./getters.type.js";
-import { FETCH_EDGES, CREATE_EDGE } from "./actions.type.js";
-import { FETCH_EDGES_END } from "./mutations.type.js";
+import {
+  CREATE_EDGE,
+  EDIT_EDGE_REMOVE_STATION,
+  FETCH_EDGES,
+  FETCH_STATIONS
+} from "./actions.type.js";
+import { FETCH_EDGES_END, FETCH_STATIONS_END } from "./mutations.type.js";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    lines,
-    stations,
-    lineDetails: lineDetails.lineDetailResponse
+    lines: [],
+    stations: [],
+    lineDetails: []
   },
   mutations: {
     [FETCH_EDGES_END](state, lineDetails) {
       state.lineDetails = lineDetails;
+    },
+
+    [FETCH_STATIONS_END](state, stations) {
+      state.stations = stations;
     }
   },
   actions: {
     async [FETCH_EDGES]({ commit }) {
       const { lineDetailResponse } = await EdgesService.get();
-      console.log(lineDetailResponse);
       commit(FETCH_EDGES_END, lineDetailResponse);
     },
     async [CREATE_EDGE](context, { lineId, payload }) {
       await EdgesService.add(lineId, payload);
       await context.dispatch(FETCH_EDGES);
+    },
+    async [EDIT_EDGE_REMOVE_STATION](context, { lineId, stationId }) {
+      await EdgesService.remove(lineId, stationId);
+      await context.dispatch(FETCH_EDGES);
+    },
+
+    async [FETCH_STATIONS]({ commit }) {
+      commit(FETCH_STATIONS_END, await StationsService.get());
     }
   },
   getters: {

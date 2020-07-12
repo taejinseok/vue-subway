@@ -11,9 +11,9 @@ import { mapGetters } from "vuex";
 import { GET_LINE_DETAILS } from "../store/getters.type.js";
 import EdgeLine from "./EdgeLine.vue";
 import tns from "../../public/static/admin/lib/slider/tiny-slider.js";
+import { FETCH_EDGES } from "../store/actions.type.js";
 
 export default {
-  name: "EdgeSlider",
   components: {
     EdgeLine
   },
@@ -21,7 +21,7 @@ export default {
     ...mapGetters({ subwayLines: GET_LINE_DETAILS })
   },
   mounted() {
-    this.initSlider();
+    this.$store.dispatch(FETCH_EDGES).then(() => this.initSlider());
   },
   methods: {
     initSlider() {
