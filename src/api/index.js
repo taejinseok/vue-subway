@@ -13,7 +13,9 @@ const ApiService = {
   post(resource, params) {
     return Vue.axios.post(resource, params);
   },
-  // update(resource, id, param) {},
+  put(resource, param) {
+    return Vue.axios.put(resource, param);
+  },
   delete(resource) {
     return Vue.axios.delete(resource);
   }
@@ -37,6 +39,9 @@ export const LinesService = {
   },
   add(params) {
     return ApiService.post("lines", params);
+  },
+  update(id, params) {
+    return ApiService.put(`lines/${id}`, params);
   },
   remove(id) {
     return ApiService.delete(`lines/${id}`);
