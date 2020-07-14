@@ -4,26 +4,31 @@
       첫차 시간
     </div>
     <div class="w-1/2 p-2 text-center text-gray-800 bg-gray-100">
-      05:00
+      {{ line.startTime }}
     </div>
     <div class="w-1/2 p-2 text-center text-gray-800 bg-gray-200">
       막차 시간
     </div>
     <div class="w-1/2 p-2 text-center text-gray-800 bg-gray-100">
-      23:30
+      {{ line.endTime }}
     </div>
     <div class="w-1/2 p-2 text-center text-gray-800 bg-gray-200">
       간격
     </div>
     <div class="w-1/2 p-2 text-center text-gray-800 bg-gray-100">
-      10분
+      {{ line.intervalTime }}
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { GET_LINE } from "../store/getters.type.js";
+
 export default {
-  name: "LineInfo"
+  computed: {
+    ...mapGetters({ line: GET_LINE })
+  }
 };
 </script>
 

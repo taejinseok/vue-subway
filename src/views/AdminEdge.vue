@@ -65,6 +65,7 @@
                   id="line-select-options"
                   class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                   v-model="edge.lineId"
+                  @change="onChangeLine"
                 >
                   <option
                     v-for="line in subwayLines"
@@ -224,11 +225,6 @@ export default {
   mounted() {
     this.$store.dispatch(FETCH_STATIONS);
   },
-  watch: {
-    lineId: function(newVal) {
-      this.stationsByLine = this.$store.getters[GET_STATIONS_BY_LINE](newVal);
-    }
-  },
   data() {
     return {
       stationsByLine: []
@@ -241,6 +237,11 @@ export default {
     },
     publishEdge() {
       this.$store.dispatch(ADD_EDGE).then(() => this.toggleModal());
+    },
+    onChangeLine() {
+      this.stationsByLine = this.$store.getters[GET_STATIONS_BY_LINE](
+        this.edge.lineId
+      );
     }
   }
 };

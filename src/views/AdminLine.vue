@@ -182,8 +182,8 @@ export default {
   },
   methods: {
     toggleModal() {
-      this.$store.commit(TOGGLE_LINE_MODAL);
       this.$store.commit(RESET_LINE);
+      this.$store.commit(TOGGLE_LINE_MODAL);
     },
     publishLine(lineId) {
       const action = lineId ? EDIT_LINE : ADD_LINE;
