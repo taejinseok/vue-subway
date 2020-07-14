@@ -5,9 +5,11 @@ import {
   GET_LINE,
   GET_LINE_DETAILS,
   GET_LINES,
-  GET_MODAL_VISIBLE_CLASS,
+  GET_LINE_MODAL_CLASS,
   GET_STATIONS,
-  GET_STATIONS_BY_LINE
+  GET_STATIONS_BY_LINE,
+  GET_EDGE_MODAL_CLASS,
+  GET_EDGE
 } from "./getters.type.js";
 import {
   ADD_EDGE,
@@ -25,12 +27,20 @@ import {
   FETCH_EDGES_END,
   FETCH_LINES_END,
   FETCH_STATIONS_END,
+  RESET_EDGE,
   RESET_LINE,
-  TOGGLE_MODAL_VISIBLE,
+  TOGGLE_EDGE_MODAL,
+  TOGGLE_LINE_MODAL,
   UPDATE_LINE_INFO
 } from "./mutations.type.js";
 
 Vue.use(Vuex);
+
+const initialModalClass = {
+  "modal-active": false,
+  "opacity-0": true,
+  "pointer-events-none": true
+};
 
 export default new Vuex.Store({
   state: {
@@ -44,12 +54,15 @@ export default new Vuex.Store({
       endTime: "",
       intervalTime: ""
     },
-    edge: {},
-    modalClass: {
-      "modal-active": false,
-      "opacity-0": true,
-      "pointer-events-none": true
-    }
+    edge: {
+      lineId: "",
+      preStationId: "",
+      stationId: "",
+      duration: "",
+      distance: ""
+    },
+    lineModalClass: { ...initialModalClass },
+    edgeModalClass: { ...initialModalClass }
   },
   mutations: {
     [FETCH_EDGES_END](state, lineDetails) {
@@ -68,10 +81,16 @@ export default new Vuex.Store({
       state.line = line;
     },
 
-    [TOGGLE_MODAL_VISIBLE](state) {
-      const modalClass = state.modalClass;
+    [TOGGLE_LINE_MODAL](state) {
+      const modalClass = state.lineModalClass;
       for (const [key, value] of Object.entries(modalClass)) {
-        state.modalClass[key] = !value;
+        state.lineModalClass[key] = !value;
+      }
+    },
+    [TOGGLE_EDGE_MODAL](state) {
+      const modalClass = state.edgeModalClass;
+      for (const [key, value] of Object.entries(modalClass)) {
+        state.edgeModalClass[key] = !value;
       }
     },
     [RESET_LINE](state) {
@@ -82,6 +101,15 @@ export default new Vuex.Store({
         endTime: "",
         intervalTime: ""
       };
+    },
+    [RESET_EDGE](state) {
+      state.edge = {
+        lineId: "",
+        preStationId: "",
+        stationId: "",
+        duration: "",
+        distance: ""
+      };
     }
   },
   actions: {
@@ -89,7 +117,8 @@ export default new Vuex.Store({
       const { lineDetailResponse } = await EdgesService.get();
       commit(FETCH_EDGES_END, lineDetailResponse);
     },
-    async [ADD_EDGE](context, { lineId, payload }) {
+    async [ADD_EDGE](context) {
+      const { lineId, ...payload } = context.state.edge;
       await EdgesService.add(lineId, payload);
       await context.dispatch(FETCH_EDGES);
     },
@@ -114,8 +143,8 @@ export default new Vuex.Store({
       commit(FETCH_LINES_END, await LinesService.get());
     },
     async [ADD_LINE](context) {
-      const { id, ...params } = context.state.line;
-      await LinesService.add(params);
+      const { id, ...payload } = context.state.line;
+      await LinesService.add(payload);
       await context.dispatch(FETCH_LINES);
     },
     async [EDIT_LINE](context) {
@@ -150,9 +179,15 @@ export default new Vuex.Store({
     [GET_LINE](state) {
       return state.line;
     },
+    [GET_EDGE](state) {
+      return state.edge;
+    },
 
-    [GET_MODAL_VISIBLE_CLASS](state) {
-      return state.modalClass;
+    [GET_LINE_MODAL_CLASS](state) {
+      return state.lineModalClass;
+    },
+    [GET_EDGE_MODAL_CLASS](state) {
+      return state.edgeModalClass;
     }
   }
 });

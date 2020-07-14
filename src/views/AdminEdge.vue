@@ -64,7 +64,7 @@
                 <select
                   id="line-select-options"
                   class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                  v-model="lineId"
+                  v-model="edge.lineId"
                 >
                   <option
                     v-for="line in subwayLines"
@@ -97,7 +97,7 @@
                   <select
                     id="previous-select-options"
                     class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                    v-model="preStationId"
+                    v-model="edge.preStationId"
                   >
                     <option
                       v-for="station in stationsByLine"
@@ -135,7 +135,7 @@
                 <select
                   id="next-station-select-options"
                   class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                  v-model="stationId"
+                  v-model="edge.stationId"
                 >
                   <option
                     v-for="station in stations"
@@ -157,7 +157,7 @@
                   id="distance"
                   type="number"
                   value="0"
-                  v-model="distance"
+                  v-model="edge.distance"
                 />
               </div>
               <div class="w-2/12 h-12 text-gray-800"></div>
@@ -170,7 +170,7 @@
                   id="duration"
                   type="number"
                   value="0"
-                  v-model="duration"
+                  v-model="edge.duration"
                 />
               </div>
             </div>
@@ -186,7 +186,7 @@
                 type="submit"
                 id="create-edge-button"
                 class="px-4 bg-yellow-500 hover:bg-yellow-400 hover:text-gray-700 text-gray-800 rounded text-white text-sm"
-                @click.prevent="createEdge"
+                @click.prevent="publishEdge"
               >
                 확인
               </button>
@@ -204,9 +204,12 @@ import { mapGetters } from "vuex";
 import {
   GET_STATIONS_BY_LINE,
   GET_LINE_DETAILS,
-  GET_STATIONS
+  GET_STATIONS,
+  GET_EDGE_MODAL_CLASS,
+  GET_EDGE
 } from "../store/getters.type.js";
 import { ADD_EDGE, FETCH_STATIONS } from "../store/actions.type.js";
+import { RESET_EDGE, TOGGLE_EDGE_MODAL } from "../store/mutations.type.js";
 
 export default {
   components: {
@@ -214,7 +217,9 @@ export default {
   },
   computed: {
     ...mapGetters({ stations: GET_STATIONS }),
-    ...mapGetters({ subwayLines: GET_LINE_DETAILS })
+    ...mapGetters({ subwayLines: GET_LINE_DETAILS }),
+    ...mapGetters({ modalClassObject: GET_EDGE_MODAL_CLASS }),
+    ...mapGetters({ edge: GET_EDGE })
   },
   mounted() {
     this.$store.dispatch(FETCH_STATIONS);
@@ -226,38 +231,16 @@ export default {
   },
   data() {
     return {
-      lineId: 0,
-      preStationId: 0,
-      stationId: 0,
-      duration: 0,
-      distance: 0,
-      stationsByLine: [],
-      modalClassObject: {
-        "modal-active": false,
-        "opacity-0": true,
-        "pointer-events-none": true
-      }
+      stationsByLine: []
     };
   },
   methods: {
     toggleModal() {
-      const entries = Object.entries(this.modalClassObject);
-      for (const [key, value] of entries) {
-        this.modalClassObject[key] = !value;
-      }
+      this.$store.commit(TOGGLE_EDGE_MODAL);
+      this.$store.commit(RESET_EDGE);
     },
-    createEdge() {
-      this.$store
-        .dispatch(ADD_EDGE, {
-          lineId: this.lineId,
-          payload: {
-            preStationId: this.preStationId,
-            stationId: this.stationId,
-            distance: this.distance,
-            duration: this.duration
-          }
-        })
-        .then(() => this.toggleModal());
+    publishEdge() {
+      this.$store.dispatch(ADD_EDGE).then(() => this.toggleModal());
     }
   }
 };

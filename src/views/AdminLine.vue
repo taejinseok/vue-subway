@@ -157,9 +157,9 @@ import { subwayLineColorOptions } from "@/utils/defaultSubwayData.js";
 import LineContainer from "../components/LineContainer.vue";
 import LineInfo from "../components/LineInfo.vue";
 import { mapGetters } from "vuex";
-import { GET_LINE, GET_MODAL_VISIBLE_CLASS } from "../store/getters.type.js";
+import { GET_LINE, GET_LINE_MODAL_CLASS } from "../store/getters.type.js";
 import { ADD_LINE, EDIT_LINE } from "../store/actions.type.js";
-import { RESET_LINE, TOGGLE_MODAL_VISIBLE } from "../store/mutations.type.js";
+import { RESET_LINE, TOGGLE_LINE_MODAL } from "../store/mutations.type.js";
 
 export default {
   components: {
@@ -169,7 +169,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      modalClassObject: GET_MODAL_VISIBLE_CLASS
+      modalClassObject: GET_LINE_MODAL_CLASS
     }),
     ...mapGetters({
       line: GET_LINE
@@ -182,7 +182,7 @@ export default {
   },
   methods: {
     toggleModal() {
-      this.$store.commit(TOGGLE_MODAL_VISIBLE);
+      this.$store.commit(TOGGLE_LINE_MODAL);
       this.$store.commit(RESET_LINE);
     },
     publishLine(lineId) {

@@ -24,7 +24,7 @@
 <script>
 import { REMOVE_LINE } from "../store/actions.type.js";
 import {
-  TOGGLE_MODAL_VISIBLE,
+  TOGGLE_LINE_MODAL,
   UPDATE_LINE_INFO
 } from "../store/mutations.type.js";
 
@@ -50,7 +50,7 @@ export default {
     },
     toggleModalToEdit() {
       this.$store.commit(UPDATE_LINE_INFO, this.line);
-      this.$store.commit(TOGGLE_MODAL_VISIBLE);
+      this.$store.commit(TOGGLE_LINE_MODAL);
     }
   }
 };
